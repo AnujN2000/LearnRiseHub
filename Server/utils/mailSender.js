@@ -7,13 +7,13 @@ const mailSender = async(email,title,body) =>{
            let transporter= nodemailer.createTransport({
               host:process.evn.MAIL_HOST,
               auth:{
-                user:process.evn.MAIL_USER,
+                user:process.env.MAIL_USER,
                 pass:process.env.MAIL_PASS,
               }
            });
 
            let info= await transporter.sendMail()({
-             from:'StudeNotion || Anuj',
+             from:'LearnRiseHub',
              to:`${email}`,
              subject:`${title}`,
              html:`${body}`,
