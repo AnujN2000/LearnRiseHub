@@ -12,7 +12,6 @@ exports.auth = async (req,res,next) =>{
         // if token is missing, return response
         if(!token){
             return res.status(401).json({
-                success:false,
                 message:"Token is missing"
             });
         }
@@ -22,9 +21,8 @@ exports.auth = async (req,res,next) =>{
            console.log(decode);
            req.user=decode;
         }
-        catch(error){
+        catch(error){ 
            return res.status(401).json({
-            success:false,
             message:"Token is invalid",
            });
         }
@@ -32,7 +30,6 @@ exports.auth = async (req,res,next) =>{
     }
     catch(error){
         return res.status(401).json({
-            success:false,
             message:"Something went wrong while validating the token"
         })
     }
@@ -51,7 +48,6 @@ exports.isStudent = async (req,res,next)=>{
    }
    catch(error){
     return res.status(500).json({
-        success:false,
         message:"User role cannot be verified, please try again"
     })
    }

@@ -79,7 +79,7 @@ exports.resetPassword= async (res,req) =>{
         }
         // hash password
         const hashedPassword= await bcrypt.hash(password,10);
-        // update password
+        // update password 
         await User.findOneAndUpdate(
            {token:token},
            {password:hashedPassword},

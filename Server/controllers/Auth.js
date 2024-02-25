@@ -16,7 +16,6 @@ exports.sendOTP= async(req,res) =>{
 
     if(checkUserPresent){
         return res.json(401).json({
-            success:false,
             message:'User already registered',
         })
     }
@@ -42,18 +41,18 @@ exports.sendOTP= async(req,res) =>{
     
     const otpPayload={email,otp};
     
+    // create entry in db
     const otpBody= await OTP.create(otpPayload);
     console.log(otpBody);
 
     res.status(200).json({
-        success:true,
         message:'OTP sent successfully',
+        otp,
     })
    }
    catch(error){
       console.log(error);
-      return res.json({
-        success:false,
+      return res.status(500).json({
         message:error.message
       })
    }
@@ -65,7 +64,7 @@ exports.sendOTP= async(req,res) =>{
 // signup
 exports.signUp= async(req,res) =>{
   try{
-         // data fetch from req body
+        // data fetch from req body
     const {
         firstName,
         lastName,
@@ -79,14 +78,12 @@ exports.signUp= async(req,res) =>{
     // validate
     if(!firstName || !lastName || !email || !password || !confirmPassword || !otp){
         return res.status(403).json({
-            success:false,
             message:"All fields are required",
         })
     } 
     // match passwords
     if(password!== confirmPassword){
         return res.status(400).json({
-            success:false,
             message:"password and ConfirmPassword value does not match, please try again"
         });
     }
@@ -106,13 +103,11 @@ exports.signUp= async(req,res) =>{
     if(recentOtp.length ===0){
         // otp not found
         return res.status(400).json({
-            success:false,
             message:"OTP not found",
         })
     }
     else if(otp!==recentOtp){
         return res.status(400).json({
-            success:false,
             message:"Invalid OTP",
         })
     }
@@ -140,7 +135,6 @@ exports.signUp= async(req,res) =>{
 
     // return res
     return res.status(200).json({
-        success:true,
         message:"User registered successfully",
         user,
     })
@@ -148,14 +142,13 @@ exports.signUp= async(req,res) =>{
   catch(error){
      console.log(error);
      return res.status(500).json({
-        success:false,
         message:"User could not be registered. Please try again."
      })
   }
 }
 
 
-// login
+// login 
 exports.login = async(req,res) =>{
     try{
     // get data from req body
@@ -171,7 +164,6 @@ exports.login = async(req,res) =>{
     const user=await User.findOne({email}).populate("additionalDetails");
     if(!user){
         return res.status(401).json({
-            success:false,
             message:"User is not registered, please signup first"
         })
     }
@@ -179,7 +171,7 @@ exports.login = async(req,res) =>{
     if(await bcrypt.compare(password,user.password)){
         const payload={
             email:user.email,
-            id:user._id,
+            id:user._id, 
             accountType:user.accountType,
         }
         const token=jwt.sign(payload,process.env.JWT_SECRET,{
@@ -202,7 +194,6 @@ exports.login = async(req,res) =>{
     }
     else{
         return res.status(401).json({
-            success:false,
             message:'Password is incorrect',
         });
     }
@@ -211,7 +202,6 @@ exports.login = async(req,res) =>{
     catch(error){
         console.log(error);
         return res.status(500).json({
-            success:false,
             message:"Login failure, please try again"
         });
     }
