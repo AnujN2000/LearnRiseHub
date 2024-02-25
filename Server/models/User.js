@@ -6,7 +6,7 @@ const userSchema=new mongoose.Schema({
         required:true,
         trim:true
     },
-    firstName:{
+    lastName:{
         type:String,
         required:true,
         trim:true
@@ -24,6 +24,14 @@ const userSchema=new mongoose.Schema({
         type:String,
         enum:["Admin","Instructor,Student"],
         requried:true
+    },
+    active: {
+        type: Boolean,
+        default: true,
+    },
+    approved: {
+        type: Boolean,
+        default: true,
     },
     additionalDetails:{
         type:mongoose.Schema.Types.ObjectId,
