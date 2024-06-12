@@ -1,1 +1,1 @@
-# LearnRiseHub
+# AcadNow Edtech Project

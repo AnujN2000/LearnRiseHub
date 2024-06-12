@@ -1,23 +1,13 @@
-// Calling pre() or post() after compiling a model does not work in Mongoose in general.
-//  you must add all middleware and plugins before calling mongoose.model()
-// post middleware are executed after the hooked method and all of its pre middleware have completed.
+const mongoose = require("mongoose")
 
-const mongoose = require("mongoose");
-
-const courseSchema = new mongoose.Schema({
-  courseName: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  courseDescription: {
-    type: String,
-    required: true,
-  },
+// Define the Courses schema
+const coursesSchema = new mongoose.Schema({
+  courseName: { type: String },
+  courseDescription: { type: String },
   instructor: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
     required: true,
+    ref: "user",
   },
   whatYouWillLearn: {
     type: String,
@@ -40,30 +30,31 @@ const courseSchema = new mongoose.Schema({
   thumbnail: {
     type: String,
   },
+  tag: {
+    type: [String],
+    required: true,
+  },
   category: {
     type: mongoose.Schema.Types.ObjectId,
+    // required: true,
     ref: "Category",
   },
-  tag: [
-    {
-      type: [String],
-      required: true,
-    },
-  ],
-  studentsEnrolled: [
+  studentsEnroled: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      required: true,
+      ref: "user",
     },
   ],
-  instructions:{
-    type:[String],
+  instructions: {
+    type: [String],
   },
-  status:{
-    type:String,
-    enum:["Draft","Published"]
-  }
-});
-// model name, courseSchema
-// Compile a model from the schema
-module.exports = mongoose.model("CourseSchema", courseSchema);
+  status: {
+    type: String,
+    enum: ["Draft", "Published"],
+  },
+  createdAt: { type: Date, default: Date.now },
+})
+
+// Export the Courses model
+module.exports = mongoose.model("Course", coursesSchema)
